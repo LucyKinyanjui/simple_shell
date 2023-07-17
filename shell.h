@@ -60,5 +60,13 @@ alias_t *add_alias_end(alias_t **head, char *name, char *val);
 
 void shell_prompt(int sign);
 int exec_cmd(char **args, char **front);
+char **dup_env(void);
+void env_free(void);
+char **get_env(const char *var);
+int main(int argc, char *argv[]);
+int number_length(int num);
+int generate_error(char **args, int err_val);
+char *int_to_str(int num);
+
 
 #endif
