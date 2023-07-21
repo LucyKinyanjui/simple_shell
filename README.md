@@ -53,40 +53,46 @@ waitpid (man 2 waitpid)
 wait3 (man 2 wait3)
 wait4 (man 2 wait4)
 write (man 2 write)
+
 More Info
+
 Output
+
 Unless specified otherwise, your program must have the exact same output as sh (/bin/sh) as well as the exact same error output.
 The only difference is when you print an error, the name of the program must be equivalent to your argv[0] (See below).
 Example of error with sh:
 
-$ echo "qwerty" | /bin/sh
+`$ echo "qwerty" | /bin/sh
 /bin/sh: 1: qwerty: not found
 $ echo "qwerty" | /bin/../bin/sh
 /bin/../bin/sh: 1: qwerty: not found
-$
+$`
 Same error with your program hsh:
 
-$ echo "qwerty" | ./hsh
+`$ echo "qwerty" | ./hsh
 ./hsh: 1: qwerty: not found
 $ echo "qwerty" | ./././hsh
 ./././hsh: 1: qwerty: not found
-$
-Compilation
+$`
+
+### Compilation
 Your code will be compiled this way:
 
-$ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
-Testing
+`$ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh`
+
+### Testing
 Your shell should work like this in interactive mode:
 
-$ ./hsh
+`$ ./hsh
 ($) /bin/ls
 hsh main.c shell.c
 ($)
 ($) exit
-$
+$`
+
 But also in non-interactive mode:
 
-$ echo "/bin/ls" | ./hsh
+`$ echo "/bin/ls" | ./hsh
 hsh main.c shell.c test_ls_2
 $
 $ cat test_ls_2
@@ -96,7 +102,8 @@ $
 $ cat test_ls_2 | ./hsh
 hsh main.c shell.c test_ls_2
 hsh main.c shell.c test_ls_2
-$
+$`
+
 We strongly encourage the entire class to work together to create a suite of checks covering both regular tests and edge cases for each task.
 
 ## Tasks
@@ -106,7 +113,7 @@ Write a beautiful code that passes the Betty checks.
 1. Simple shell 0.1
 Write a UNIX command line interpreter.
 
-Usage: simple_shell
+Usage:< simple_shell
 Your Shell should:
 
 Display a prompt and wait for the user to type a command. A command line always ends with a new line.
@@ -123,7 +130,8 @@ Implement built-ins.
 Handle special characters : ", ', `, \, *, &, #.
 Be able to move the cursor
 Handle commands with arguments
-julien@ubuntu:~/shell$ ./shell 
+
+`julien@ubuntu:~/shell$ ./shell 
 #cisfun$ ls
 ./shell: No such file or directory
 #cisfun$ /bin/ls
@@ -141,7 +149,8 @@ env-environ.c  exec    fork    mypid   ppid   printenv  promptc  shell     stat 
 julien@ubuntu:~/shell$ echo "/bin/ls" | ./shell
 #cisfun$ barbie_j       env-main.c  exec.c  fork.c  pid.c  ppid.c    prompt   prompt.c  shell.c stat.c         wait
 env-environ.c  exec    fork    mypid   ppid   printenv  promptc  shell     stat test_scripting.sh  wait.c
-#cisfun$ julien@ubuntu:~/shell$
+#cisfun$ julien@ubuntu:~/shell$`
+
 2. Simple shell 0.2
 Simple shell 0.1 +
 
@@ -151,7 +160,8 @@ Simple shell 0.2 +
 
 Handle the PATH.
 fork must not be called if the command doesn’t exist.
-julien@ubuntu:~/shell$ ./shell_0.3
+
+`julien@ubuntu:~/shell$ ./shell_0.3
 :) /bin/ls
 barbie_j       env-main.c  exec.c  fork.c  pid.c  ppid.c    prompt   prompt.c  shell_0.3  stat    test_scripting.sh  wait.c
 env-environ.c  exec    fork    mypid   ppid   printenv  promptc  shell     shell.c    stat.c  wait
@@ -166,7 +176,7 @@ drwx------ 3 root   root   4096 Dec  5 12:09 systemd-private-062a0eca7f2a4434973
 drwx------ 3 root   root   4096 Dec  5 12:07 systemd-private-062a0eca7f2a44349733e78cb4abdff4-systemd-timesyncd.service-CdXUtH
 -rw-rw-r-- 1 julien julien    0 Dec  5 12:09 unity_support_test.0
 :) ^C
-julien@ubuntu:~/shell$ 
+julien@ubuntu:~/shell$ `
 4. Simple shell 0.4
 Simple shell 0.3 +
 
@@ -177,7 +187,7 @@ You don’t have to handle any argument to the built-in exit.
 Simple shell 0.4 +
 
 Implement the env built-in, that prints the current environment.
-julien@ubuntu:~/shell$ ./simple_shell
+`julien@ubuntu:~/shell$ ./simple_shell
 $ env
 USER=julien
 LANGUAGE=en_US
@@ -192,7 +202,7 @@ TERM=xterm-256color
 PATH=/home/julien/bin:/home/julien/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 DISPLAY=:0
 $ exit
-julien@ubuntu:~/shell$ 
+julien@ubuntu:~/shell$ `
 6. Simple shell 0.1.1
 Simple shell 0.1 +
 
@@ -214,9 +224,9 @@ handle arguments for the built-in exit.
 Usage: exit status, where status is an integer used to exit the shell.
 julien@ubuntu:~/shell$ ./shell_0.4.1
 $ exit 98
-julien@ubuntu:~/shell$ echo $?
+`julien@ubuntu:~/shell$ echo $?
 98
-julien@ubuntu:~/shell$ 
+julien@ubuntu:~/shell$` 
 9. setenv, unsetenv
 Simple shell 1.0 +
 
@@ -246,7 +256,7 @@ man chdir, man getcwd
 Simple shell 1.0 +
 
 Handle the commands separator ;.
-alex@~$ ls /var ; ls /var
+`alex@~$ ls /var ; ls /var
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tmp
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tmp
 alex@~$ ls /hbtn ; ls /var
@@ -260,12 +270,13 @@ backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tm
 ls: cannot access /hbtn: No such file or directory
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tmp
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tmp
-alex@~$
+alex@~$`
+
 12. && and ||
 Simple shell 1.0 +
 
 Handle the && and || shell logical operators.
-alex@~$ ls /var && ls /var
+`alex@~$ ls /var && ls /var
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tmp
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tmp
 alex@~$ ls /hbtn && ls /var
@@ -296,7 +307,7 @@ ls: cannot access /hbtn: No such file or directory
 ls: cannot access /hbtn: No such file or directory
 ls: cannot access /hbtn: No such file or directory
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  spool  tmp
-alex@~$
+alex@~$`
 13. alias
 Simple shell 1.0 +
 
@@ -311,7 +322,7 @@ Simple shell 1.0 +
 Handle variables replacement.
 Handle the $? variable.
 Handle the $$ variable.
-julien@ubuntu:~/shell$ ./hsh
+`julien@ubuntu:~/shell$ ./hsh
 $ ls /var
 backups  cache  crash  lib  local  lock  log  mail  metrics  opt  run  snap  spool  tmp
 $ echo $?
@@ -321,16 +332,16 @@ $ echo $$
 $ echo $PATH
 /home/julien/bin:/home/julien/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 $ exit 
-julien@ubuntu:~/shell$ 
+julien@ubuntu:~/shell$ `
 15. Comments
 Simple shell 1.0 +
 
 Handle comments (#)
-julien@ubuntu:~/shell$ sh
+`julien@ubuntu:~/shell$ sh
 $ echo $$ # ls -la
 5114
 $ exit
-julien@ubuntu:~/shell$ 
+julien@ubuntu:~/shell$ `
 16. File as input
 Simple shell 1.0 +
 
