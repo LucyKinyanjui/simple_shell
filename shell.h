@@ -60,6 +60,8 @@ alias_t *add_alias_end(alias_t **head, char *name, char *val);
 
 void shell_prompt(int sign);
 int exec_cmd(char **args, char **front);
+int run_cmd(char *file_path, int *exec_ret);
+int run_cmd_error(char *file_path);
 char **dup_env(void);
 void env_free(void);
 char **get_env(const char *var);
@@ -67,6 +69,18 @@ int main(int argc, char *argv[]);
 int number_length(int num);
 int generate_error(char **args, int err_val);
 char *int_to_str(int num);
+char *env_error(char **args);
+char *error_1(char **args);
+char *error_2_exit(char **args);
+char *error_2_cd(char **args);
+char *error_2_syntax(char **args);
+char *get_cmd(char *command);
+char *path_fill(char *path);
+list_t *get_dir(char *path);
+void args_free(char **args, char **head);
+char get_pid(void);
+char *env_val(char *env, int len);
+void change_var(char **line, int *exec_ret);
 
 
 #endif
