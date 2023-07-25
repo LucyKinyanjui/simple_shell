@@ -1,86 +1,89 @@
 #include "shell.h"
+
 /**
-* get_newLength - gets the new line size,divided by ";", "||", "&&&", or "#".
-* @stream: the line to be checked
+* get_new_length - a function that gets the new line size,
+* divided by ";", "||", "&&&", or "#".
+* @line: the line to be checked
 * Return: size of new line
 * Description: cuts short lines containing '#'* comments with '\0'.
 */
-ssize_t get_newLength(char *stream)
+ssize_t get_new_length(char *line)
 {
-size_t m;
+size_t k;
 char present, new;
-ssize_t newLength = 0;
+ssize_t new_length = 0;
 
-for (m = 0; stream[m]; m++)
+for (k = 0; line[k]; k++)
 {
-present = stream[m], new = stream[m + 1];
+present = line[k], new = line[k + 1];
 if (present == '#')
 {
-if (m == 0 || stream[m - 1] == ' ')
+if (k == 0 || line[k - 1] == ' ')
 {
-stream[m] = '\0';
+line[k] = '\0';
 break;
 }
 }
-else if (m != 0)
+else if (k != 0)
 {
 if (present == ';')
 {
-if (new == ';' && stream[m - 1] != ' ' && stream[m - 1] != ';')
+if (new == ';' && line[k - 1] != ' ' && line[k - 1] != ';')
 {
-newLength += 2;
+new_length += 2;
 continue;
 }
-else if (stream[m - 1] == ';' && new != ' ')
+else if (line[k - 1] == ';' && new != ' ')
 {
-newLength += 2;
+new_length += 2;
 continue;
 }
-if (stream[m - 1] != ' ')
-newLength++;
+if (line[k - 1] != ' ')
+new_length++;
 if (new != ' ')
-newLength++;
+new_length++;
 }
 else
-check_for_ops(&stream[m], &newLength);
+search_logical_ops(&line[k], &new_length);
 }
 else if (present == ';')
 {
-if (m != 0 && stream[m - 1] != ' ')
-newLength++;
+if (k != 0 && line[k - 1] != ' ')
+new_length++;
 if (new != ' ' && new != ';')
-newLength++;
+new_length++;
 }
-newLength++;
+new_length++;
 }
-return (newLength);
+return (new_length);
 }
+
 /**
-* check_for_ops - a function that checks a line for
+* search_logical_ops - a function that checks a line for
 * logical operators "||" or "&&".
-* @stream:a line pointer to be checked for logical operators
-* @newLength: Pointer to newLength in get_newLength function.
+* @line: a line pointer to be checked for logical operators
+* @new_length: Pointer to new length in get_new_length function.
 */
-void check_for_ops(char *stream, ssize_t *newLength)
+void search_logical_ops(char *line, ssize_t *new_length)
 {
 char prev, present, new;
 
-prev = *(stream - 1);
-present = *stream;
-new = *(stream + 1);
+prev = *(line - 1);
+present = *line;
+new = *(line + 1);
 
 if (present == '&')
 {
 if (new == '&' && prev != ' ')
-(*newLength)++;
+(*new_length)++;
 else if (prev == '&' && new != ' ')
-(*newLength)++;
+(*new_length)++;
 }
 else if (present == '|')
 {
 if (new == '|' && prev != ' ')
-(*newLength)++;
+(*new_length)++;
 else if (prev == '|' && new != ' ')
-(*newLength)++;
+(*new_length)++;
 }
 }

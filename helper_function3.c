@@ -1,128 +1,130 @@
 #include "shell.h"
 
 /**
-  * locate_args - gets command from standard input
-  * @stream: command storage buffer
-  * @execRet: last executed command return value
+  * find_args -  a function that gets command from standard input
+  * @line: command storage buffer
+  * @exec_ret: last executed command return value
   * Return: stored command pointer, Null otherwise
   */
-char *locate_args(char *stream, int *execRet)
+char *find_args(char *line, int *exec_ret)
 {
-	int history = 0;
-	size_t numb = 0;
+	int hist = 0;
+	size_t num = 0;
 	ssize_t read;
 	char *prompt = "$ ";
 
-	if (stream)
+	if (line)
 	{
-		free(stream);
+		free(line);
 	}
-	read = getline_fn(&stream, &numb, STDIN_FILENO);
+	read = _getline(&line, &num, STDIN_FILENO);
 	if (read == -1)
 		return (NULL);
 	if (read == 1)
 	{
-		history++;
+		hist++;
 		if (isatty(STDIN_FILENO))
 			write(STDOUT_FILENO, prompt, 2);
-		return (locate_args(stream, execRet));
+		return (find_args(line, exec_ret));
 	}
-	stream[read - 1] = '\0';
-	var_substitute(&stream, execRet);
-	lineHandler(&stream, read);
-	return (stream);
+	line[read - 1] = '\0';
+	change_var(&line, exec_ret);
+	handle_line(&line, read);
+	return (line);
 }
 /**
-  * argsRunner - does command execution calls
+  * run_args - a function that does command execution calls
   * @args: pointer to argument strings
   * @first: The first string argument
-  * @execRet: the last executed command parent process return value
+  * @exec_ret: the last executed command parent process return value
   * Return: last executed command parent process return value
   */
-int argsRunner(char **args, char **first, int *execRet)
+int run_args(char **args, char **first, int *exec_ret)
 {
-	int history = 0;
-	int itr;
-	int retVal;
-	int (*builtin_cmd)(char **args, char **first);
+	int hist = 0;
+	int i;
+	int ret_val;
+	int (*builtin)(char **args, char **first);
 
-	builtin_cmd = locate_custom(args[0]);
-	if (builtin_cmd)
+	builtin = find_builtin_cmd(args[0]);
+	if (builtin)
 	{
-		retVal = builtin_cmd(args + 1, first);
-		if (retVal != TERMINATE)
-			*execRet = retVal;
+		ret_val = builtin(args + 1, first);
+		if (ret_val != EXIT)
+			*exec_ret = ret_val;
 	}
 	else
 	{
-		*execRet = execute_cmd(args, first);
-		retVal = *execRet;
+		*exec_ret = run_cmd(args, first);
+		ret_val = *exec_ret;
 	}
-	history++;
-	for (itr = 0; args[itr]; itr++)
-		free(args[itr]);
-	return (retVal);
+	hist++;
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	return (ret_val);
 }
 /**
-  * argsHandler - locates, calls and carrys out the command execution
-  * @execRet: the last executed command parent process return value
+  * handle_arguments -  a function that locates, calls
+  * and carrys out the command execution
+  * @exec_ret: the last executed command parent process return value
   * Return: EOF or -1 or exit value of the last executed command
   */
-int argsHandler(int *execRet)
+int handle_arguments(int *exec_ret)
 {
-	int retVal = 0, itr;
-	char **args, *stream = NULL, **first;
+	int ret_val = 0, i;
+	char **args, *line = NULL, **first;
 
-	stream = locate_args(stream, execRet);
-	if (!stream)
-		return (EOF_CUSTOM);
-	args = strtok_fn(stream, " ");
-	free(stream);
+	line = find_args(line, exec_ret);
+	if (!line)
+		return (END_OF_FILE);
+	args = str_tok(line, " ");
+	free(line);
 	if (!args)
-		return (retVal);
-	if (argsChecker(args) != 0)
+		return (ret_val);
+	if (check_args(args) != 0)
 	{
-		*execRet = 2;
-		argsFree(args, args);
-		return (*execRet);
+		*exec_ret = 2;
+		args_free(args, args);
+		return (*exec_ret);
 	}
 	first = args;
-	for (itr = 0; args[itr]; itr++)
+	for (i = 0; args[i]; i++)
 	{
-		if (_strncmp(args[itr], ";", 1) == 0)
+		if (_strncmp(args[i], ";", 1) == 0)
 		{
-			free(args[itr]);
-			args[itr] = NULL;
-			retVal = argsCaller(args, first, execRet);
-			args = &args[++itr];
-			itr = 0;
+			free(args[i]);
+			args[i] = NULL;
+			ret_val = call_args(args, first, exec_ret);
+			args = &args[++i];
+			i = 0;
 		}
 	}
 	if (args)
-		retVal = argsCaller(args, first, execRet);
+		ret_val = call_args(args, first, exec_ret);
 	free(first);
-	return (retVal);
+	return (ret_val);
 }
 /**
-  * argsChecker - locates if there are any leading symbols or operators
+  * check_args - a function that locates if there are any
+  * leading symbols or operators
   * @args: pointer to argument strings
   * Return: -2 or 0
   */
-int argsChecker(char **args)
+int check_args(char **args)
 {
-	size_t itr;
+	size_t i;
 	char *curr, *next;
 
-	for (itr = 0; args[itr]; itr++)
+	for (i = 0; args[i]; i++)
 	{
-		curr = args[itr];
+		curr = args[i];
 		if (curr[0] == ';' || curr[0] == '&' || curr[0] == '|')
 		{
-			if (itr == 0 || curr[1] == ';')
-				return (write_error(&args[itr], 2));
-			next = args[itr + 1];
+			if (i == 0 || curr[1] == ';')
+				return (generate_error(&args[i], 2));
+			next = args[i + 1];
 			if (next && (next[0] == ';' || next[0] == '&' || next[0] == '|'))
-				return (write_error(&args[itr + 1], 2));
+				return (generate_error(&args[i + 1], 2));
 		}
 	}
 	return (0);

@@ -51,7 +51,7 @@ int exec_cmd(char **args, char **front)
 		{
 		execve(command, args, environ);
 		if (errno == EACCES)
-		exit_status = (generate_error(args, 126)), env_free(), free_args
+		exit_status = (generate_error(args, 126)), env_free(), args_free
 		(args, front), free_alias_list(aliases), _exit(exit_status);
 		}
 		else

@@ -1,5 +1,5 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef _SHELL_H_
+#define _SHELL_H_
 
 #include <stdlib.h>
 #include <errno.h>
@@ -31,6 +31,7 @@ typedef struct list_s
 	char *path;
 	struct list_s *next;
 } list_t;
+list_t *add_node_end(list_t **head, char *path);
 
 /**
  * struct builtin_s - A new struct type defining builtin commands
@@ -81,6 +82,25 @@ void args_free(char **args, char **head);
 char get_pid(void);
 char *env_val(char *env, int len);
 void change_var(char **line, int *exec_ret);
-
+int _strlen(const char *str);
+char *_strcpy( char *dest, const char *src);
+char *_strcat(char *dest, const char *src);
+char *_strncat(char *dest, const char *src, size_t n);
+char *_strchr(char *str, char chr);
+int _strspn(char *str, char *prefix);
+int _strcmp(char *str1, char str2);
+int _strncmp(const char *str1, const char *str2, size_t n);
+int tok_length(char *str, char *deli);
+int count_tokens(char *str, char *deli);
+char **str_tok(char *str, char *deli);
+void free_alias_list(alias_t *head);
+void free_list(list_t *head);
+void handle_line(char **line, ssize_t read);
+ssize_t get_new_length(char *line);
+void search_logical_ops(char *line, ssize_t *new_length);
+char *find_args(char *line, int *exec_ret);
+int run_args(char **args, char **first, int *exec_ret);
+int handle_arguments(int *exec_ret);
+int check_args(char **args);
 
 #endif

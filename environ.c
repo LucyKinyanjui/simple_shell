@@ -26,7 +26,7 @@ char **get_env(const char *var)
 	length = _strlen(var);
 	for (index = 0; environ[index]; index++)
 	{
-		if (_strcmp(var, environ[index], length) == 0)
+		if (_strncmp(var, environ[index], length) == 0)
 			return (&environ[index]);
 	}
 
