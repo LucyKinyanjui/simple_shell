@@ -42,11 +42,11 @@ int run_cmd(char *file_path, int *exec_ret)
 				line[j] = ' ';
 		}
 	}
-	change_var(&line, exec_ret), assess_line(&line, line_size);
-	args = _strtok(line, " "), free(line);
+	change_var(&line, exec_ret), handle_line(&line, line_size);
+	args = str_tok(line, " "), free(line);
 	if (!args)
 		return (0);
-	if (args_check(args) != 0)
+	if (check_args(args) != 0)
 	{
 		*exec_ret = 2, args_free(args, args);
 		return (*exec_ret);

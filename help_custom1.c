@@ -1,37 +1,37 @@
 #include "shell.h"
 
 /**
-  * envHelp - Displays info on builtin command 'env'
+  * env_help - Displays info on builtin command 'env'
   */
-void envHelp(void)
+void env_help(void)
 {
-	char *stream = "env: env\n\tPrints the current environment.\n";
+	char *message = "env: env\n\tPrints the current environment.\n";
 
-	write(STDOUT_FILENO, stream, _strlen(stream));
+	write(STDOUT_FILENO, message, _strlen(message));
 }
 /**
-  * setenvHelp - Displays infor on builtin command 'setenv'
+  * setenv_help - Displays infor on builtin command 'setenv'
   */
-void setenvHelp(void)
+void setenv_help(void)
 {
-	char *stream = "setenv: setenv [VARIABLE] [VALUE]\n\tInitializes a new";
+	char *message = "setenv: setenv [VARIABLE] [VALUE]\n\tInitializes a new";
 
-	write(STDOUT_FILENO, stream, _strlen(stream));
-	stream = "environment variable, or modifies an existing one.\n\n";
-	write(STDOUT_FILENO, stream, _strlen(stream));
-	stream = "\tUpon failure, prints a message to stderr.\n";
-	write(STDOUT_FILENO, stream, _strlen(stream));
+	write(STDOUT_FILENO, message, _strlen(message));
+	message = "environment variable, or modifies an existing one.\n\n";
+	write(STDOUT_FILENO, message, _strlen(message));
+	message = "\tUpon failure, prints a message to stderr.\n";
+	write(STDOUT_FILENO, message, _strlen(message));
 }
 /**
-  * unsetenvHelp - Displays info on builtin command 'unsetenv'
+  * unsetenv_help - Displays info on builtin command 'unsetenv'
   */
-void unsetenvHelp(void)
+void unsetenv_help(void)
 {
-	char *stream = "unsetenv: unsetenv [VARIABLE]\n\tRemoves an ";
+	char *message = "unsetenv: unsetenv [VARIABLE]\n\tRemoves an ";
 
-	write(STDOUT_FILENO, stream, _strlen(stream));
-	stream = "environmental variable.\n\n\tUpon failure, prints a ";
-	write(STDOUT_FILENO, stream, _strlen(stream));
-	stream = "message to stderr.\n";
-	write(STDOUT_FILENO, stream, _strlen(stream));
+	write(STDOUT_FILENO, message, _strlen(message));
+	message = "environmental variable.\n\n\tUpon failure, prints a ";
+	write(STDOUT_FILENO, message, _strlen(message));
+	message = "message to stderr.\n";
+	write(STDOUT_FILENO, message, _strlen(message));
 }

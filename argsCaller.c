@@ -1,50 +1,50 @@
 #include "shell.h"
 /**
-  * argsCaller - separates operators from commands and calls them.
+  * call_args - separates operators from commands and calls them.
   * @args: pointer to argument strings
-  * @first: the first argument in the list
-  * @execRet: the last executed command parent process return value
+  * @front: the first argument in the list
+  * @exec_ret: the last executed command parent process return value
   * Return: last executed command parent process return value
   */
-int argsCaller(char **args, char **first, int *execRet)
+int call_args(char **args, char **front, int *exec_ret)
 {
-int retVal, itr;
+int ret_val, i;
 
 if (!args[0])
-return (*execRet);
-for (itr = 0; args[itr]; itr++)
+return (*exec_ret);
+for (i = 0; args[i]; i++)
 {
-if (_strncmp(args[itr], "||", 2) == 0)
+if (_strncmp(args[i], "||", 2) == 0)
 {
-free(args[itr]), args[itr] = NULL, args = aliasesReplace(args);
-retVal = argsRunner(args, first, execRet);
-if (*execRet != 0)
+free(args[i]), args[i] = NULL, args = replace_aliases(args);
+ret_val = run_args(args, front, exec_ret);
+if (*exec_ret != 0)
 {
-args = &args[++itr], itr = 0;
+args = &args[++i], i = 0;
 }
 else
 {
-for (itr++; args[itr]; itr++)
-free(args[itr]);
-return (retVal);
+for (i++; args[i]; i++)
+free(args[i]);
+return (ret_val);
 }
 }
-else if (_strncmp(args[itr], "&&", 2) == 0)
+else if (_strncmp(args[i], "&&", 2) == 0)
 {
-free(args[itr]), args[itr] = NULL, args = aliasesReplace(args);
-retVal = argsRunner(args, first, execRet);
-if (*execRet == 0)
+free(args[i]), args[i] = NULL, args = replace_aliases(args);
+ret_val = run_args(args, front, exec_ret);
+if (*exec_ret == 0)
 {
-args = &args[++itr], itr = 0;
+args = &args[++i], i = 0;
 }
 else
 {
-for (itr++; args[itr]; itr++)
-free(args[itr]);
-return (retVal);
+for (i++; args[i]; i++)
+free(args[i]);
+return (ret_val);
 }
 }
 }
-args = aliasesReplace(args), retVal = argsRunner(args, first, execRet);
-return (retVal);
+args = replace_aliases(args), ret_val = run_args(args, front, exec_ret);
+return (ret_val);
 }

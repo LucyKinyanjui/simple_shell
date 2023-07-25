@@ -15,6 +15,8 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
+#define BUFSIZE 1024
+
 #define END_OF_FILE -2
 
 #define EXIT -3
@@ -88,7 +90,7 @@ char *_strcat(char *dest, const char *src);
 char *_strncat(char *dest, const char *src, size_t n);
 char *_strchr(char *str, char chr);
 int _strspn(char *str, char *prefix);
-int _strcmp(char *str1, char str2);
+int _strcmp(char *str1, char *str2);
 int _strncmp(const char *str1, const char *str2, size_t n);
 int tok_length(char *str, char *deli);
 int count_tokens(char *str, char *deli);
@@ -102,5 +104,25 @@ char *find_args(char *line, int *exec_ret);
 int run_args(char **args, char **first, int *exec_ret);
 int handle_arguments(int *exec_ret);
 int check_args(char **args);
+int alias_custom(char **args, char __attribute__((__unused__)) **front);
+void get_alias(char *name, char *val);
+void print_alias(alias_t *alias);
+char **replace_aliases(char **args);
+int call_args(char **args, char **front, int *exec_ret);
+int _putchar(char c);
+void _puts(char *str);
+bool file_status(char *pathname, struct stat *statbuf);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void bring_line(char **lineptr, size_t *n_len, char *buffer, size_t b_len);
+ssize_t get_line(char **lineptr, size_t *n_len, FILE *sream);
+void all_help(void);
+void alias_help(void);
+void cd_help(void);
+void exit_help(void);
+void help_help(void);
+void env_help(void);
+void setenv_help(void);
+void unsetenv_help(void);
+
 
 #endif
