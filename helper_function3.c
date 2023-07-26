@@ -17,7 +17,7 @@ char *find_args(char *line, int *exec_ret)
 	{
 		free(line);
 	}
-	read = _getline(&line, &num, STDIN_FILENO);
+	read = get_line(&line, &num, STDIN_FILENO);
 	if (read == -1)
 		return (NULL);
 	if (read == 1)
@@ -35,27 +35,27 @@ char *find_args(char *line, int *exec_ret)
 /**
   * run_args - a function that does command execution calls
   * @args: pointer to argument strings
-  * @first: The first string argument
+  * @front: The first string argument
   * @exec_ret: the last executed command parent process return value
   * Return: last executed command parent process return value
   */
-int run_args(char **args, char **first, int *exec_ret)
+int run_args(char **args, char **front, int *exec_ret)
 {
 	int hist = 0;
 	int i;
 	int ret_val;
-	int (*builtin)(char **args, char **first);
+	int (*builtin)(char **args, char **front);
 
-	builtin = find_builtin_cmd(args[0]);
+	builtin = _mybuiltin(args[0]);
 	if (builtin)
 	{
-		ret_val = builtin(args + 1, first);
+		ret_val = builtin(args + 1, front);
 		if (ret_val != EXIT)
 			*exec_ret = ret_val;
 	}
 	else
 	{
-		*exec_ret = run_cmd(args, first);
+		*exec_ret = exec_cmd(args, front);
 		ret_val = *exec_ret;
 	}
 	hist++;
@@ -72,7 +72,7 @@ int run_args(char **args, char **first, int *exec_ret)
 int handle_arguments(int *exec_ret)
 {
 	int ret_val = 0, i;
-	char **args, *line = NULL, **first;
+	char **args, *line = NULL, **front;
 
 	line = find_args(line, exec_ret);
 	if (!line)
@@ -87,21 +87,21 @@ int handle_arguments(int *exec_ret)
 		args_free(args, args);
 		return (*exec_ret);
 	}
-	first = args;
+	front = args;
 	for (i = 0; args[i]; i++)
 	{
 		if (_strncmp(args[i], ";", 1) == 0)
 		{
 			free(args[i]);
 			args[i] = NULL;
-			ret_val = call_args(args, first, exec_ret);
+			ret_val = call_args(args, front, exec_ret);
 			args = &args[++i];
 			i = 0;
 		}
 	}
 	if (args)
-		ret_val = call_args(args, first, exec_ret);
-	free(first);
+		ret_val = call_args(args, front, exec_ret);
+	free(front);
 	return (ret_val);
 }
 /**

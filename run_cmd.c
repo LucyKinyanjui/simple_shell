@@ -9,15 +9,15 @@
  */
 int run_cmd(char *file_path, int *exec_ret)
 {
-	char buffer[120], *line, **args, **head;
+	char buffer[120], *line, **args, **front;
 	ssize_t file, bytes_read, j;
 	unsigned int line_size = 0, old_size = 120;
-	int exit_status;
+	int ret_val;
 
 	file = open(file_path, O_RDONLY);
 	if (file == -1)
 	{
-		exec_ret = run_cmd_error(file_path);
+		*exec_ret = run_cmd_error(file_path);
 		return (*exec_ret);
 	}
 	line = malloc(sizeof(char) * old_size);
@@ -51,19 +51,19 @@ int run_cmd(char *file_path, int *exec_ret)
 		*exec_ret = 2, args_free(args, args);
 		return (*exec_ret);
 	}
-	head = args;
+	front = args;
 	for (j = 0; args[j]; j++)
 	{
-		if (_strcmp(args[j], ";", 1) == 0)
+		if (_strncmp(args[j], ";", 1) == 0)
 		{
 			free(args[j]), args[j] = NULL;
-			exit_status = call_args(args, head, exec_ret);
+			ret_val = call_args(args, front, exec_ret);
 			args = &args[++j];
 			j = 0;
 		}
 	}
-	exit_status = call_args(args, head, exec_ret);
-	free(head);
+	ret_val = call_args(args, front, exec_ret);
+	free(front);
 
-	return (exit_status);
+	return (ret_val);
 }

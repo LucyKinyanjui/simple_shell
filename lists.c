@@ -54,7 +54,7 @@ list_t *add_node_end(list_t **head, char *path)
 	if (!new_node)
 		return (NULL);
 
-	new_node->path;
+	new_node->path = path;
 	new_node->next = NULL;
 
 	if (*head)

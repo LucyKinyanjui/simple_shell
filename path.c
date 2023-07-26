@@ -99,7 +99,7 @@ list_t *get_dir(char *path)
 	path_copy = path_fill(path);
 	if (!path_copy)
 		return (NULL);
-	dir_list = _strtok(path_copy, ":");
+	dir_list = str_tok(path_copy, ":");
 	free(path_copy);
 	if (!dir_list)
 		return (NULL);
