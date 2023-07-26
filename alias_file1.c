@@ -6,7 +6,7 @@
   * @front: the first argument in args
   * Return: 0, -1 otherwise
   */
-int alias_custom(char **args, char __attribute__((__unused__)) **front)
+int _myalias(char **args, char __attribute__((__unused__)) **front)
 {
 	alias_t *temp = aliases;
 	int i, ret_val = 0;
