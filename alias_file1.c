@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
-  * alias_custom -  a builtin command that prints aliases and sets aliases
+  * _myalias -  a builtin command that prints aliases and sets aliases
   * @args: pointer to string arrays
   * @front: the first argument in args
   * Return: 0, -1 otherwise

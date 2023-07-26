@@ -44,7 +44,7 @@ typedef struct builtin_s
 {
 	char *name;
 	int (*cmd_fn)(char **argv, char **front);
-} buitin_t;
+} builtin_t;
 
 /**
  * struct alias_s - aliases struct
@@ -77,7 +77,7 @@ char *error_1(char **args);
 char *error_2_exit(char **args);
 char *error_2_cd(char **args);
 char *error_2_syntax(char **args);
-char *get_cmd(char *command);
+char *find_cmd(char *command);
 char *path_fill(char *path);
 list_t *get_dir(char *path);
 void args_free(char **args, char **head);
@@ -104,7 +104,7 @@ char *find_args(char *line, int *exec_ret);
 int run_args(char **args, char **first, int *exec_ret);
 int handle_arguments(int *exec_ret);
 int check_args(char **args);
-int alias_custom(char **args, char __attribute__((__unused__)) **front);
+int _myalias(char **args, char __attribute__((__unused__)) **front);
 void get_alias(char *name, char *val);
 void print_alias(alias_t *alias);
 char **replace_aliases(char **args);
@@ -123,6 +123,11 @@ void help_help(void);
 void env_help(void);
 void setenv_help(void);
 void unsetenv_help(void);
-
-
+int _mycd(char **args, char __attribute__((__unused__)) **front);
+int (*_mybuiltin(char *cmd))(char **args, char **front);
+int _myhelp(char **args, char __attribute__((__unused__)) **front);
+int _myexit(char **args, char **front);
+int _myenv(char **args, char __attribute__((__unused__)) **front);
+int _mysetenv(char **args, char __attribute__((__unused__)) **front);
+int _myunsetenv(char **args, char __attribute__((__unused__)) **front);
 #endif

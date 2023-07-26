@@ -2,16 +2,16 @@
 
 
 /**
-* custom_env - a function that prints current environment variable.
-* @args: argument array passed to the shell
-* @first: A double pointer to the beginning of args.
+* _myenv - a function that prints current environment variable.
+* @args: the argument array passed to the shell
+* @front: A double pointer to the beginning of args.
 *Return: -1 inewLinease of error or 0.
 *Description: Prints one variable per line in the
 *              format 'variable'='value'.
 */
-int custom_env(char **args, char __attribute__((__unused__)) **first)
+int _myenv(char **args, char __attribute__((__unused__)) **front)
 {
-char newLine = '\n';
+char new_line = '\n';
 int index;
 
 
@@ -21,7 +21,7 @@ return (-1);
 for (index = 0; environ[index]; index++)
 {
 write(STDOUT_FILENO, environ[index], _strlen(environ[index]));
-write(STDOUT_FILENO, &newLine, 1);
+write(STDOUT_FILENO, &new_line, 1);
 }
 
 (void)args;
@@ -29,94 +29,94 @@ return (0);
 }
 
 /**
-* custom_setenv - a function that changes or adds environmental
+* _mysetenv - a function that changes or adds environmental
 * variable to the PATH.
-* @args: argument array passed to the shell
-* @first: A double pointer to the beginning of args array.
+* @args: the argument array passed to the shell
+* @front: A double pointer to the beginning of args array.
 * Return: -1 incase of an error or 0.
 * Description: args[1] is the name of the new or existing PATH variable.
 *              args[2] is the value to set the new or changed variable to.
 */
-int custom_setenv(char **args, char __attribute__((__unused__)) **first)
+int _mysetenv(char **args, char __attribute__((__unused__)) **front)
 {
-char **newEnvn, *newVal;
-char **environVar = NULL;
+char **new_envn, *new_val;
+char **environ_var = NULL;
 int index;
 size_t size;
 
 if (!args[0] || !args[1])
-return (write_error(args, -1));
-newVal = malloc(_strlen(args[0]) + 1 + _strlen(args[1]) + 1);
-if (!newVal)
-return (write_error(args, -1));
-_strcpy(newVal, args[0]);
-_strcat(newVal, "=");
-_strcat(newVal, args[1]);
-environVar = locate_env(args[0]);
-if (environVar)
+return (generate_error(args, -1));
+new_val = malloc(_strlen(args[0]) + 1 + _strlen(args[1]) + 1);
+if (!new_val)
+return (generate_error(args, -1));
+_strcpy(new_val, args[0]);
+_strcat(new_val, "=");
+_strcat(new_val, args[1]);
+environ_var = get_env(args[0]);
+if (environ_var)
 {
-free(*environVar);
-*environVar = newVal;
+free(*environ_var);
+*environ_var = new_val;
 return (0);
 }
 for (size = 0; environ[size]; size++)
 ;
 
-newEnvn = malloc(sizeof(char *) * (size + 2));
-if (!newEnvn)
+new_envn = malloc(sizeof(char *) * (size + 2));
+if (!new_envn)
 {
-free(newVal);
-return (write_error(args, -1));
+free(new_val);
+return (generate_error(args, -1));
 }
 for (index = 0; environ[index]; index++)
-newEnvn[index] = environ[index];
-newEnvn[index++] = newVal;
-newEnvn[index] = NULL;
+new_envn[index] = environ[index];
+new_envn[index++] = new_val;
+new_envn[index] = NULL;
 free(environ);
-environ = newEnvn;
+environ = new_envn;
 return (0);
 }
 
 /**
-* custom_unsetenv - a function that deletes an environmental variable
+* _myunsetenv - a function that deletes an environmental variable
 * from the PATH.
-* @args: argument array pased to the shell
-* @first: A double pointer to the beginning of args.
+* @args: the argument array pased to the shell
+* @front: A double pointer to the beginning of args.
 * Description: args[1] is the PATH variable to remove.
 * Return: -1 incase of an error or 0 otherwise.
 */
-int custom_unsetenv(char **args, char __attribute__((__unused__)) **first)
+int _myunsetenv(char **args, char __attribute__((__unused__)) **front)
 {
-int index, pos2;
-char **newEnvn;
-char **environVar;
+int index, index2;
+char **new_envn;
+char **environ_var;
 size_t size;
 
 if (!args[0])
-return (write_error(args, -1));
-environVar = locate_env(args[0]);
-if (!environVar)
+return (generate_error(args, -1));
+environ_var = get_env(args[0]);
+if (!environ_var)
 return (0);
 
 for (size = 0; environ[size]; size++)
 ;
 
-newEnvn = malloc(sizeof(char *) * size);
-if (!newEnvn)
-return (write_error(args, -1));
+new_envn = malloc(sizeof(char *) * size);
+if (!new_envn)
+return (generate_error(args, -1));
 
-for (index = 0, pos2 = 0; environ[index]; index++)
+for (index = 0, index2 = 0; environ[index]; index++)
 {
-if (*environVar == environ[index])
+if (*environ_var == environ[index])
 {
-free(*environVar);
+free(*environ_var);
 continue;
 }
-newEnvn[pos2] = environ[index];
-pos2++;
+new_envn[index2] = environ[index];
+index2++;
 }
 free(environ);
-environ = newEnvn;
+environ = new_envn;
 environ[size - 1] = NULL;
 
 return (0);
