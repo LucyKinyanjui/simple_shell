@@ -6,7 +6,7 @@
  * @stream: the stream to read from
  * Return: the number of bytes read
  */
-ssize_t get_line(char **lineptr, size_t *n_len, FILE *stream)
+ssize_t get_line(char **lineptr, size_t *n_len, FILE *stream, int (*callback)(const char *input)))
 {
 	int r;
 	static ssize_t input;
@@ -41,6 +41,17 @@ ssize_t get_line(char **lineptr, size_t *n_len, FILE *stream)
 		input++;
 	}
 	buffer[input] = '\0';
+
+    // Call the callback function with the input buffer
+    if (callback)
+    {
+        if (callback(buffer) != 0)
+        {
+            free(buffer);
+            return (-1);
+        }
+    }
+
 	bring_line(lineptr, n_len, buffer, input);
 	ret_val = input;
 	if (r != 0)
